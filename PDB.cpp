@@ -19,6 +19,7 @@ void PDB::load(std::string pdb_file) {
     if (file_obj.is_open()) {
 
         //We have created a while loop that reads the file line by line, using getline. 
+        int atom_counter {0};
         while (std::getline(file_obj, line)) {
 
             // Only ATOM or HETATM lines are read. 
@@ -30,7 +31,7 @@ void PDB::load(std::string pdb_file) {
                 std::string atom_name  = line.substr(12,4);
                 std::string alt_loc_id = line.substr(16,1);
                 std::string res_name   = line.substr(17,3);
-                std::string blank2     = line.substr(20,1);                        
+                std::string blank2     = line.substr(20,1);                  
                 std::string chain_id   = line.substr(21,1);
                 std::string res_num    = line.substr(22,4);
                 std::string code_insert= line.substr(26,1);
@@ -46,9 +47,10 @@ void PDB::load(std::string pdb_file) {
                 
                 //std::cout << line << std::endl;
                 std::cout << atom_row << atom_num << blank1 << atom_name << alt_loc_id << res_name << blank2 << chain_id << res_num << code_insert << blank3 << x << y << z << occupancy << bfactor << blank4 << elem_symbol << charge << std::endl;
+                ++atom_counter;
             }
         }
-        
+        _natoms = atom_counter;
         file_obj.close();
     
     } else {
@@ -56,4 +58,8 @@ void PDB::load(std::string pdb_file) {
         std::cout << "Unable to open file" << std::endl;
 
     }
+}
+
+int PDB::get_natoms() {
+    return _natoms;
 }
